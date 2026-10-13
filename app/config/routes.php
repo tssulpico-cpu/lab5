@@ -1,16 +1,18 @@
 <?php
 
 //lab 3
+global $router;
 $router->get('/profile', 'StudentController::index', ['middleware' => 'StudentMiddleware']);
 //lab 4
 $router->any('/show-users', 'AuthController::login');
 //lab 5
 $router->any('/', 'AuthController::login');
 $router->any('/login', 'AuthController::login');
+$router->any('/register', 'AuthController::register');
 $router->get('/logout', 'AuthController::logout');
 
 // API authentication and product CRUD
-$router->group(['prefix' => '/api'], function ($router) {
+    $router->group(['prefix' => '/api'], function ($router) {
     $router->post('/login', 'ApiController::login');
     $router->post('/register', 'ApiController::register');
     $router->post('/logout', 'ApiController::logout');

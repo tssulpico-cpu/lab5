@@ -3,62 +3,502 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign in | LavaLust</title>
-    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <title>Login | Product Management</title>
+
     <style>
-        :root { --red: #dc2626; --red-dark: #b91c1c; --ink: #0a0a0a; --line: #27272a; --muted: #a1a1aa; }
-        * { box-sizing: border-box; margin: 0; padding: 0; } [v-cloak] { display: none; }
-        body { min-height: 100vh; background: var(--ink); color: #fff; font-family: 'Inter', sans-serif; line-height: 1.6; }
-        .shell { min-height: 100vh; display: grid; grid-template-rows: 64px 1fr; }
-        nav { border-bottom: 1px solid #1f1f1f; padding: 0 2rem; }
-        .nav-inner { max-width: 1100px; height: 64px; margin: auto; display: flex; align-items: center; justify-content: space-between; }
-        .logo { color: #fff; font-size: 1.1rem; font-weight: 600; }
-        .logo span { color: var(--red); }
-        .back { color: var(--muted); font-size: .9rem; text-decoration: none; }
-        .back:hover { color: #fff; }
-        main { display: grid; place-items: center; padding: 3rem 1.5rem; }
-        .login-wrap { width: min(100%, 420px); animation: rise .5s ease both; }
-        .eyebrow { color: var(--red); font-size: .78rem; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; }
-        h1 { margin: .7rem 0 .5rem; font-size: 2.4rem; letter-spacing: -1px; line-height: 1.2; }
-        .intro { color: var(--muted); margin-bottom: 2rem; }
-        form { padding: 1.5rem; border: 1px solid var(--line); background: #111113; border-radius: 12px; }
-        label { display: block; color: #d4d4d8; font-size: .85rem; margin-bottom: .45rem; }
-        input { width: 100%; padding: .85rem .9rem; margin-bottom: 1.1rem; border: 1px solid #3f3f46; border-radius: 8px; background: #0a0a0a; color: #fff; font: inherit; outline: none; }
-        input:focus { border-color: var(--red); box-shadow: 0 0 0 3px rgba(220, 38, 38, .15); }
-        button { width: 100%; padding: .9rem 1rem; border: 0; border-radius: 8px; background: var(--red); color: #fff; font: inherit; font-weight: 600; cursor: pointer; }
-        button:hover { background: var(--red-dark); }
-        .error { margin-bottom: 1rem; padding: .75rem .9rem; border: 1px solid #7f1d1d; border-radius: 8px; color: #fecaca; background: #2a1010; font-size: .9rem; }
-        @keyframes rise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
-        @media (max-width: 640px) { nav { padding: 0 1.25rem; } h1 { font-size: 2rem; } }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", Arial, sans-serif;
+        }
+
+        :root {
+            --bg-main: #06132f;
+            --bg-secondary: #0b2452;
+            --card-bg: rgba(255,255,255,0.94);
+            --text-main: #172554;
+            --text-muted: #64748b;
+            --input-bg: #f8fbff;
+            --input-border: #dbe4ef;
+            --blue: #2563eb;
+            --cyan: #06b6d4;
+            --button-text: #ffffff;
+        }
+
+        body.light-mode {
+            --bg-main: #dbeafe;
+            --bg-secondary: #eff6ff;
+            --card-bg: rgba(255,255,255,0.96);
+            --text-main: #172554;
+            --text-muted: #64748b;
+            --input-bg: #f8fbff;
+            --input-border: #cbd5e1;
+        }
+
+        body.dark-mode {
+            --bg-main: #06132f;
+            --bg-secondary: #0b2452;
+            --card-bg: rgba(15,23,42,0.90);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --input-bg: rgba(15,23,42,0.75);
+            --input-border: rgba(148,163,184,0.25);
+        }
+
+        body {
+            min-height: 100vh;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            padding: 25px;
+
+            color: var(--text-main);
+
+            background:
+                radial-gradient(
+                    circle at 10% 20%,
+                    rgba(37,99,235,.30),
+                    transparent 30%
+                ),
+                radial-gradient(
+                    circle at 90% 80%,
+                    rgba(6,182,212,.25),
+                    transparent 30%
+                ),
+                linear-gradient(
+                    135deg,
+                    var(--bg-main),
+                    var(--bg-secondary)
+                );
+
+            transition: background .4s ease, color .4s ease;
+        }
+
+        /* =========================
+           THEME BUTTON
+        ========================= */
+
+        .theme-toggle {
+            position: fixed;
+
+            top: 22px;
+            right: 25px;
+
+            width: 48px;
+            height: 48px;
+
+            border-radius: 50%;
+
+            border: 1px solid rgba(255,255,255,.25);
+
+            background: rgba(255,255,255,.12);
+
+            color: white;
+
+            font-size: 20px;
+
+            cursor: pointer;
+
+            backdrop-filter: blur(12px);
+
+            transition: .3s;
+
+            z-index: 10;
+        }
+
+        .theme-toggle:hover {
+            transform: rotate(15deg) scale(1.08);
+
+            background: rgba(255,255,255,.20);
+        }
+
+        /* =========================
+           CONTAINER
+        ========================= */
+
+        .login-container {
+            width: 100%;
+            max-width: 430px;
+
+            position: relative;
+            z-index: 2;
+        }
+
+        .login-card {
+            padding: 42px;
+
+            border-radius: 24px;
+
+            background: var(--card-bg);
+
+            border: 1px solid rgba(255,255,255,.25);
+
+            box-shadow:
+                0 25px 70px rgba(0,0,0,.30);
+
+            backdrop-filter: blur(18px);
+
+            transition:
+                background .4s ease,
+                transform .3s ease,
+                box-shadow .3s ease;
+        }
+
+        .login-card:hover {
+            transform: translateY(-5px);
+
+            box-shadow:
+                0 30px 80px rgba(0,0,0,.40);
+        }
+
+        /* =========================
+           LOGO
+        ========================= */
+
+        .logo {
+            width: 70px;
+            height: 70px;
+
+            margin: 0 auto 22px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 20px;
+
+            color: white;
+
+            font-size: 22px;
+            font-weight: 800;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #2563eb,
+                    #06b6d4
+                );
+
+            box-shadow:
+                0 10px 35px rgba(37,99,235,.40);
+        }
+
+        h1 {
+            text-align: center;
+
+            color: var(--text-main);
+
+            font-size: 30px;
+
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            text-align: center;
+
+            color: var(--text-muted);
+
+            font-size: 14px;
+
+            margin-bottom: 32px;
+        }
+
+        /* =========================
+           FORM
+        ========================= */
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+
+            color: var(--text-main);
+
+            font-size: 13px;
+
+            font-weight: 700;
+
+            margin-bottom: 8px;
+        }
+
+        input {
+            width: 100%;
+
+            height: 52px;
+
+            padding: 0 16px;
+
+            border: 1px solid var(--input-border);
+
+            border-radius: 12px;
+
+            outline: none;
+
+            background: var(--input-bg);
+
+            color: var(--text-main);
+
+            font-size: 14px;
+
+            transition: .25s;
+        }
+
+        input::placeholder {
+            color: var(--text-muted);
+        }
+
+        input:focus {
+            border-color: #06b6d4;
+
+            box-shadow:
+                0 0 0 4px rgba(6,182,212,.10);
+        }
+
+        /* =========================
+           LOGIN BUTTON
+        ========================= */
+
+        .login-btn {
+            width: 100%;
+
+            height: 53px;
+
+            border: none;
+
+            border-radius: 12px;
+
+            color: white;
+
+            font-size: 15px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            background:
+                linear-gradient(
+                    100deg,
+                    #2563eb,
+                    #06b6d4,
+                    #7c3aed
+                );
+
+            background-size: 200% auto;
+
+            box-shadow:
+                0 10px 25px rgba(37,99,235,.30);
+
+            transition: .3s;
+        }
+
+        .login-btn:hover {
+            background-position: right center;
+
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 15px 35px rgba(6,182,212,.30);
+        }
+
+        /* =========================
+           REGISTER
+        ========================= */
+
+        .register-text {
+            text-align: center;
+
+            margin-top: 25px;
+
+            color: var(--text-muted);
+
+            font-size: 14px;
+        }
+
+        .register-text a {
+            color: #06b6d4;
+
+            font-weight: 700;
+
+            text-decoration: none;
+        }
+
+        .register-text a:hover {
+            color: #2563eb;
+
+            text-decoration: underline;
+        }
+
+        .login-error {
+            margin: 14px 0;
+            color: #b91c1c;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .login-notification {
+            margin: 14px 0;
+            color: #15803d;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        @media (max-width: 480px) {
+
+            .login-card {
+                padding: 32px 25px;
+            }
+
+            .theme-toggle {
+                top: 15px;
+                right: 15px;
+            }
+
+        }
     </style>
 </head>
-<body>
-    <div id="app" class="shell" v-cloak>
-        <nav><div class="nav-inner"><div class="logo">Lava<span>Lust</span></div><a class="back" href="<?= site_url('/login'); ?>">Secure access</a></div></nav>
-        <main>
-            <section class="login-wrap">
-                <div class="eyebrow">Hallo</div>
-                <h1>Welcome back.</h1>
-                <p class="intro">Sign in to manage your product workspace.</p>
-                <div v-if="error" class="error" role="alert">{{ error }}</div>
-                <form action="<?= site_url('/login'); ?>" method="post">
-                    <label for="username">Username</label>
-                    <input type="text" id="username" name="username" autocomplete="username" required>
-                    <label for="password">Password</label>
-                    <input type="password" id="password" name="password" autocomplete="current-password" required>
-                    <button type="submit">Sign in</button>
-                </form>
-            </section>
-        </main>
+
+<body class="dark-mode">
+
+    <!-- DARK / LIGHT MODE BUTTON -->
+
+    <button
+        type="button"
+        class="theme-toggle"
+        id="themeToggle"
+        aria-label="Toggle dark and light mode"
+    >
+        ☀️
+    </button>
+
+
+    <div class="login-container">
+
+        <div class="login-card">
+
+            <div class="logo">
+                PM
+            </div>
+
+            <h1>
+                Welcome Back
+            </h1>
+
+            <p class="subtitle">
+                Login to your Product Management account
+            </p>
+
+            <?php if (!empty($error)): ?>
+                <p class="login-error" role="alert"><?= htmlspecialchars($error, ENT_QUOTES, 'UTF-8'); ?></p>
+            <?php endif; ?>
+            <?php if (!empty($notification)): ?>
+                <p class="login-notification" role="status"><?= htmlspecialchars($notification, ENT_QUOTES, 'UTF-8'); ?></p>
+            <?php endif; ?>
+
+            <!-- ORIGINAL LOGIN FUNCTION -->
+
+            <form
+                action="<?= site_url('/login'); ?>"
+                method="post"
+            >
+
+                <div class="form-group">
+
+                    <label>
+                        Username
+                    </label>
+
+                    <input
+                        type="text"
+                        name="username"
+                        placeholder="Username"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Password
+                    </label>
+
+                    <input
+                        type="password"
+                        name="password"
+                        placeholder="Password"
+                        required
+                    >
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="login-btn"
+                >
+                    Login
+                </button>
+
+            </form>
+
+
+            <!-- ORIGINAL REGISTER LINK -->
+
+            <p class="register-text">
+
+                Need an account?
+
+                <a href="<?= site_url('/register'); ?>">
+                    Register
+                </a>
+
+            </p>
+
+        </div>
+
     </div>
+
+
+    <!-- THEME SCRIPT -->
+
     <script>
-        Vue.createApp({
-            data: () => ({
-                error: <?= json_encode($error ?? '', JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>
-            })
-        }).mount('#app');
+
+        const themeToggle =
+            document.getElementById("themeToggle");
+
+        const body =
+            document.body;
+
+        themeToggle.addEventListener("click", function () {
+
+            if (body.classList.contains("dark-mode")) {
+
+                body.classList.remove("dark-mode");
+
+                body.classList.add("light-mode");
+
+                themeToggle.textContent = "🌙";
+
+            } else {
+
+                body.classList.remove("light-mode");
+
+                body.classList.add("dark-mode");
+
+                themeToggle.textContent = "☀️";
+
+            }
+
+        });
+
     </script>
+
 </body>
 </html>

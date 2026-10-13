@@ -162,13 +162,13 @@ lavalust/
 
 ```php
 $database['main'] = array(
-    'driver'	=> '',
+    'driver'	=> getenv('DB_DRIVER') ?: 'mysql',
     'hostname'	=> getenv('DB_HOST') ?: '',
     'port'		=> getenv('DB_PORT') ?: '',
-    'username'	=> getenv('DB_USERNAME') ?: '',
+    'username'	=> getenv('DB_USERNAME') ?: getenv('DB_USER') ?: '',
     'password'	=> getenv('DB_PASSWORD') ?: '',
-    'database'	=> getenv('DB_NAME') ?: '',
-    'charset'	=> '',
+    'database'	=> getenv('DB_NAME') ?: getenv('DB_DATABASE') ?: '',
+    'charset'	=> 'utf8mb4',
     'dbprefix'	=> '',
     // Optional for SQLite
     'path'      => ''
@@ -180,8 +180,13 @@ $database['main'] = array(
 **File:** `app/config/config.php`
 
 ```php
-$config['base_url'] = 'http://localhost:3000/';
+$config['base_url'] = getenv('APP_URL') ?: '';
 ```
+
+Copy `.env.example` to `.env` for local development. For deployment, configure
+`APP_ENV=production`, `APP_URL`, and the database and secret variables in the
+hosting provider's environment settings. Keep `.env` out of source control and
+container images; the Docker build excludes it.
 
 ---
 

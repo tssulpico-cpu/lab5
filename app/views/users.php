@@ -1,776 +1,1281 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student List - Academic Portal</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>User List</title>
+
     <style>
-        :root {
-            --bg-body: #f8fafc;
-            --surface: #ffffff;
-            --sidebar-bg: #09090b;
-            --sidebar-text: #f4f4f5;
-            --text-main: #18181b;
-            --text-muted: #71717a;
-            --border-color: #e4e4e7;
-            --accent-red: #dc2626;
-            --accent-red-hover: #b91c1c;
-            --accent-red-light: #fef2f2;
-            --radius: 6px;
-            --shadow-subtle: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
-        }
+        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap');
 
         * {
-            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #060b0a;
+            --panel: #0c1412;
+            --panel-dark: #080e0d;
+
+            --teal: #42d9b0;
+            --teal-light: #69e6c5;
+
+            --text: #e7efec;
+            --text-soft: #96a7a1;
+            --text-muted: #61726c;
+
+            --border: rgba(102, 151, 137, 0.16);
+            --border-soft: rgba(102, 151, 137, 0.09);
+        }
+
+        /* =========================
+           PAGE
+        ========================== */
+
+        html {
+            min-height: 100%;
         }
 
         body {
-            background-color: var(--bg-body);
-            color: var(--text-main);
-            display: flex;
             min-height: 100vh;
-            line-height: 1.5;
+
+            padding: 22px;
+
+            font-family: "DM Sans", "Segoe UI", Arial, sans-serif;
+
+            color: var(--text);
+
+            background:
+                radial-gradient(
+                    circle at 12% 8%,
+                    rgba(66, 217, 176, 0.075),
+                    transparent 25%
+                ),
+                radial-gradient(
+                    circle at 91% 88%,
+                    rgba(66, 217, 176, 0.045),
+                    transparent 28%
+                ),
+                linear-gradient(
+                    145deg,
+                    #050908 0%,
+                    #09110f 52%,
+                    #050908 100%
+                );
+
+            overflow-x: hidden;
         }
 
-        /* SIDEBAR NAVIGATION */
-        .sidebar {
-            width: 260px;
-            background-color: var(--sidebar-bg);
-            color: var(--sidebar-text);
-            display: flex;
-            flex-direction: column;
+        /* Subtle background circles */
+
+        body::before {
+            content: "";
+
             position: fixed;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            z-index: 100;
+
+            width: 540px;
+            height: 540px;
+
+            top: -330px;
+            right: -180px;
+
+            border: 1px solid rgba(66, 217, 176, 0.055);
+
+            border-radius: 50%;
+
+            pointer-events: none;
+
+            z-index: -1;
         }
 
-        .sidebar-brand {
-            padding: 1.5rem 1.25rem;
-            font-size: 1.1rem;
-            font-weight: 700;
-            letter-spacing: -0.025em;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            border-bottom: 1px solid #27272a;
+        body::after {
+            content: "";
+
+            position: fixed;
+
+            width: 470px;
+            height: 470px;
+
+            bottom: -330px;
+            left: -170px;
+
+            border: 1px solid rgba(66, 217, 176, 0.045);
+
+            border-radius: 50%;
+
+            pointer-events: none;
+
+            z-index: -1;
         }
 
-        .sidebar-brand i {
-            color: var(--accent-red);
-        }
+        /* =========================
+           MAIN CONTAINER
+        ========================== */
 
-        .sidebar-nav {
-            padding: 1rem 0.75rem;
-            display: flex;
-            flex-direction: column;
-            gap: 0.25rem;
-            flex: 1;
-        }
-
-        .nav-item {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 0.75rem 1rem;
-            color: #a1a1aa;
-            text-decoration: none;
-            font-size: 0.9rem;
-            font-weight: 500;
-            border-radius: var(--radius);
-            transition: all 0.15s ease;
-        }
-
-        .nav-item:hover {
-            background-color: #18181b;
-            color: #ffffff;
-        }
-
-        .nav-item.active {
-            background-color: var(--accent-red-light);
-            color: var(--accent-red);
-            border-left: 3px solid var(--accent-red);
-        }
-
-        /* MAIN LAYOUT */
-        .main-wrapper {
-            flex: 1;
-            margin-left: 260px;
-            display: flex;
-            flex-direction: column;
-            min-width: 0;
-        }
-
-        .portal-container {
-            max-width: 1400px;
+        .container {
             width: 100%;
+            max-width: 1650px;
+
             margin: 0 auto;
-            padding: 2.5rem 2rem;
+
+            padding: 36px 48px 30px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(15, 25, 23, 0.97),
+                    rgba(8, 14, 13, 0.98)
+                );
+
+            border: 1px solid var(--border);
+
+            border-radius: 25px;
+
+            box-shadow:
+                0 35px 100px rgba(0, 0, 0, 0.45),
+                inset 0 1px 0 rgba(255, 255, 255, 0.018);
+
+            animation: pageIn 0.55s ease forwards;
         }
 
-        /* PAGE HEADER */
-        .page-header {
+        @keyframes pageIn {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* =========================
+           HEADER
+        ========================== */
+
+        .top-section {
             display: flex;
+
+            align-items: center;
             justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
-            gap: 1rem;
+
+            gap: 25px;
+
+            margin-bottom: 30px;
         }
 
-        .header-title h1 {
-            font-size: 1.75rem;
-            font-weight: 700;
-            color: var(--text-main);
-            letter-spacing: -0.025em;
-        }
-
-        .header-title p {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            margin-top: 0.2rem;
-        }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            background-color: var(--accent-red);
-            color: white;
-            border: none;
-            padding: 0.6rem 1.1rem;
-            font-size: 0.9rem;
-            font-weight: 600;
-            border-radius: var(--radius);
-            cursor: pointer;
-            text-decoration: none;
-            transition: background-color 0.15s ease;
-        }
-
-        .btn:hover {
-            background-color: var(--accent-red-hover);
-        }
-
-        .btn-outline {
-            background-color: var(--surface);
-            color: var(--text-main);
-            border: 1px solid var(--border-color);
-        }
-
-        .btn-outline:hover {
-            background-color: var(--bg-body);
-            border-color: var(--text-muted);
-        }
-
-        /* SUMMARY CARDS */
-        .summary-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-
-        .summary-card {
-            background-color: var(--surface);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius);
-            padding: 1.25rem;
-            box-shadow: var(--shadow-subtle);
+        .title-area {
             display: flex;
+
             align-items: center;
-            gap: 1rem;
+
+            gap: 16px;
         }
 
-        .summary-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: var(--radius);
-            background-color: var(--accent-red-light);
+        /* =========================
+           MODERN USER ICON
+        ========================== */
+
+        .main-icon {
+            position: relative;
+
+            width: 62px;
+            height: 62px;
+
+            flex-shrink: 0;
+
             display: flex;
+
             align-items: center;
             justify-content: center;
-            color: var(--accent-red);
-            font-size: 1.1rem;
+
+            border-radius: 18px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(66, 217, 176, 0.13),
+                    rgba(66, 217, 176, 0.025)
+                );
+
+            border: 1px solid rgba(66, 217, 176, 0.22);
+
+            box-shadow:
+                0 0 30px rgba(66, 217, 176, 0.055);
+
+            color: var(--teal);
+
+            transition:
+                transform 0.3s ease,
+                box-shadow 0.3s ease,
+                border-color 0.3s ease;
         }
 
-        .summary-content .card-title {
-            font-size: 0.75rem;
-            font-weight: 700;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
+        .main-icon:hover {
+            transform: translateY(-3px);
+
+            border-color: rgba(66, 217, 176, 0.42);
+
+            box-shadow:
+                0 0 35px rgba(66, 217, 176, 0.12);
         }
 
-        .summary-content .card-value {
-            font-size: 1.35rem;
-            font-weight: 700;
-            color: var(--accent-red);
-            margin-top: 0.1rem;
+        .main-icon svg {
+            width: 31px;
+            height: 31px;
+
+            fill: none;
+
+            stroke: currentColor;
+
+            stroke-width: 1.5;
+
+            stroke-linecap: round;
+            stroke-linejoin: round;
         }
 
-        /* SEARCH AND FILTER TOOLBAR */
-        .toolbar {
-            background-color: var(--surface);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius);
-            padding: 1rem 1.25rem;
-            margin-bottom: 1.5rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 1rem;
-            box-shadow: var(--shadow-subtle);
-        }
+        /* Live indicator */
 
-        .search-group {
-            position: relative;
-            flex: 1;
-            min-width: 260px;
-        }
+        .main-icon::after {
+            content: "";
 
-        .search-group i {
             position: absolute;
-            left: 0.9rem;
-            top: 50%;
-            transform: translateY(-50%);
+
+            width: 8px;
+            height: 8px;
+
+            right: -3px;
+            top: -3px;
+
+            border-radius: 50%;
+
+            background: var(--teal-light);
+
+            box-shadow:
+                0 0 0 4px rgba(66, 217, 176, 0.06),
+                0 0 14px rgba(66, 217, 176, 0.65);
+        }
+
+        /* =========================
+           TITLE
+        ========================== */
+
+        .title-content h2 {
+            font-size: 28px;
+
+            line-height: 1.15;
+
+            font-weight: 700;
+
+            letter-spacing: -0.8px;
+
+            color: var(--text);
+        }
+
+        .title-content p {
+            margin-top: 6px;
+
+            font-size: 13px;
+
             color: var(--text-muted);
-            transition: color 0.15s ease;
         }
 
-        .search-group input {
-            width: 100%;
-            padding: 0.55rem 0.75rem 0.55rem 2.5rem;
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius);
-            font-size: 0.9rem;
-            outline: none;
-            color: var(--text-main);
-            background-color: var(--surface);
-            transition: border-color 0.15s ease;
-        }
+        /* =========================
+           HEADER RIGHT
+        ========================== */
 
-        .search-group input:focus {
-            border-color: var(--accent-red);
-        }
-
-        .search-group input:focus + i {
-            color: var(--accent-red);
-        }
-
-        .filter-group {
+        .header-meta {
             display: flex;
+
             align-items: center;
-            gap: 0.75rem;
-            flex-wrap: wrap;
+
+            gap: 10px;
         }
 
-        .filter-select {
-            padding: 0.55rem 0.85rem;
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius);
-            font-size: 0.9rem;
-            background-color: var(--surface);
-            color: var(--text-main);
-            outline: none;
-            cursor: pointer;
-            transition: border-color 0.15s ease;
+        .directory-label {
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            padding: 11px 14px;
+
+            border: 1px solid var(--border-soft);
+
+            border-radius: 10px;
+
+            background: rgba(255, 255, 255, 0.012);
+
+            color: #657770;
+
+            font-size: 10px;
+
+            font-weight: 700;
+
+            letter-spacing: 0.9px;
+
+            text-transform: uppercase;
         }
 
-        .filter-select:focus {
-            border-color: var(--accent-red);
+        .directory-icon {
+            width: 7px;
+            height: 7px;
+
+            border-radius: 50%;
+
+            background: var(--teal);
+
+            box-shadow:
+                0 0 9px rgba(66, 217, 176, 0.6);
         }
 
-        /* CONTENT CONTAINER & TABLE */
-        .content-card {
-            background-color: var(--surface);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow-subtle);
-            overflow: hidden;
+        .counter {
+            display: flex;
+
+            align-items: center;
+
+            gap: 9px;
+
+            padding: 11px 15px;
+
+            border: 1px solid rgba(66, 217, 176, 0.18);
+
+            border-radius: 10px;
+
+            background: rgba(66, 217, 176, 0.055);
+
+            color: var(--teal);
+
+            font-size: 12px;
+
+            font-weight: 700;
+
+            white-space: nowrap;
         }
 
-        .table-responsive {
+        .counter-dot {
+            width: 7px;
+            height: 7px;
+
+            border-radius: 50%;
+
+            background: var(--teal);
+
+            box-shadow:
+                0 0 9px rgba(66, 217, 176, 0.65);
+        }
+
+        /* =========================
+           TABLE CARD
+        ========================== */
+
+        .table-card {
             width: 100%;
+
+            overflow: hidden;
+
+            background:
+                rgba(5, 10, 9, 0.72);
+
+            border: 1px solid var(--border);
+
+            border-radius: 20px;
+
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.012);
+        }
+
+        .table-wrapper {
+            width: 100%;
+
             overflow-x: auto;
         }
 
-        .student-table {
+        /* =========================
+           TABLE
+        ========================== */
+
+        table {
             width: 100%;
+
+            table-layout: fixed;
+
             border-collapse: collapse;
+        }
+
+        /*
+            Column proportions
+
+            ID         = 10%
+            First Name = 22%
+            Last Name  = 17%
+            Email      = 27%
+            Username   = 24%
+        */
+
+        th:nth-child(1),
+        td:nth-child(1) {
+            width: 10%;
+        }
+
+        th:nth-child(2),
+        td:nth-child(2) {
+            width: 22%;
+        }
+
+        th:nth-child(3),
+        td:nth-child(3) {
+            width: 17%;
+        }
+
+        th:nth-child(4),
+        td:nth-child(4) {
+            width: 27%;
+        }
+
+        th:nth-child(5),
+        td:nth-child(5) {
+            width: 24%;
+        }
+
+        /* =========================
+           TABLE HEADER
+        ========================== */
+
+        th {
+            height: 52px;
+
+            padding: 0 22px;
+
             text-align: left;
-            font-size: 0.9rem;
-        }
 
-        .student-table th {
-            background-color: var(--bg-body);
-            color: var(--text-main);
+            background:
+                rgba(255, 255, 255, 0.018);
+
+            border-bottom: 1px solid var(--border);
+
+            color: #63756e;
+
+            font-size: 10px;
+
             font-weight: 700;
-            padding: 0.85rem 1.25rem;
-            border-bottom: 1px solid var(--border-color);
+
+            letter-spacing: 1.15px;
+
             text-transform: uppercase;
-            font-size: 0.75rem;
-            letter-spacing: 0.05em;
         }
 
-        .student-table td {
-            padding: 0.85rem 1.25rem;
-            border-bottom: 1px solid var(--border-color);
-            color: var(--text-main);
+        th:first-child {
+            padding-left: 28px;
+        }
+
+        /* =========================
+           TABLE ROWS
+        ========================== */
+
+        tbody tr {
+            height: 76px;
+
+            transition:
+                background 0.25s ease,
+                transform 0.25s ease;
+        }
+
+        tbody tr:not(:last-child) {
+            border-bottom: 1px solid var(--border-soft);
+        }
+
+        tbody tr:hover {
+            background:
+                linear-gradient(
+                    90deg,
+                    rgba(66, 217, 176, 0.055),
+                    rgba(66, 217, 176, 0.018),
+                    transparent
+                );
+
+            transform: translateX(2px);
+        }
+
+        /* IMPORTANT:
+           No ::before directly on <tr>.
+           This prevents an extra table cell.
+        */
+
+        tbody tr td:first-child {
+            position: relative;
+        }
+
+        /* Hover accent safely attached to first cell */
+
+        tbody tr td:first-child::before {
+            content: "";
+
+            position: absolute;
+
+            left: -1px;
+
+            top: 16px;
+            bottom: 16px;
+
+            width: 2px;
+
+            border-radius: 0 3px 3px 0;
+
+            background: var(--teal);
+
+            box-shadow:
+                0 0 12px rgba(66, 217, 176, 0.55);
+
+            opacity: 0;
+
+            transition: opacity 0.25s ease;
+        }
+
+        tbody tr:hover td:first-child::before {
+            opacity: 1;
+        }
+
+        /* =========================
+           CELLS
+        ========================== */
+
+        td {
+            height: 76px;
+
+            padding: 0 22px;
+
             vertical-align: middle;
+
+            color: var(--text-soft);
+
+            font-size: 13.5px;
+
+            font-weight: 500;
+
+            white-space: nowrap;
+
+            overflow: hidden;
+
+            text-overflow: ellipsis;
         }
 
-        .student-table tbody tr {
-            transition: background-color 0.1s ease;
+        td:first-child {
+            padding-left: 28px;
         }
 
-        .student-table tbody tr:hover {
-            background-color: var(--bg-body);
-        }
+        /* =========================
+           ID BADGE
+        ========================== */
 
-        .student-table tbody tr:last-child td {
-            border-bottom: none;
-        }
+        .id-badge {
+            display: inline-flex;
 
-        /* IDENTITY PROFILE ELEMENTS */
-        .student-profile-cell {
-            display: flex;
             align-items: center;
-            gap: 0.85rem;
+            justify-content: center;
+
+            min-width: 43px;
+
+            height: 30px;
+
+            padding: 0 10px;
+
+            border-radius: 8px;
+
+            border: 1px solid rgba(66, 217, 176, 0.15);
+
+            background:
+                rgba(66, 217, 176, 0.045);
+
+            color: var(--teal);
+
+            font-size: 11px;
+
+            font-weight: 700;
+
+            transition:
+                transform 0.25s ease,
+                background 0.25s ease,
+                border-color 0.25s ease;
         }
+
+        tbody tr:hover .id-badge {
+            transform: translateY(-1px);
+
+            background:
+                rgba(66, 217, 176, 0.09);
+
+            border-color:
+                rgba(66, 217, 176, 0.25);
+        }
+
+        /* =========================
+           NAME
+        ========================== */
+
+        .name-cell {
+            display: flex;
+
+            align-items: center;
+
+            gap: 13px;
+
+            min-width: 0;
+
+            color: var(--text);
+
+            font-weight: 650;
+        }
+
+        /* =========================
+           AVATAR
+        ========================== */
 
         .avatar {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background-color: var(--bg-body);
-            color: var(--text-main);
-            border: 1px solid var(--border-color);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 0.8rem;
+            position: relative;
+
+            width: 40px;
+            height: 40px;
+
             flex-shrink: 0;
-        }
 
-        .student-info .name {
-            font-weight: 700;
-            color: var(--text-main);
-        }
-
-        .student-info .id-muted {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-        }
-
-        .badge {
-            display: inline-flex;
-            align-items: center;
-            padding: 0.2rem 0.6rem;
-            border-radius: 50px;
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
-
-        .badge-active {
-            background-color: var(--accent-red-light);
-            color: var(--accent-red);
-        }
-
-        .text-muted {
-            color: var(--text-muted);
-        }
-
-        /* ACTIONS */
-        .actions-cell {
             display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
 
-        .btn-icon {
-            background: none;
-            border: 1px solid var(--border-color);
-            width: 32px;
-            height: 32px;
-            border-radius: var(--radius);
-            display: inline-flex;
             align-items: center;
             justify-content: center;
-            color: var(--text-main);
-            cursor: pointer;
-            transition: all 0.15s ease;
-        }
 
-        .btn-icon:hover {
-            background-color: var(--text-main);
-            color: #ffffff;
-            border-color: var(--text-main);
-        }
+            border-radius: 11px;
 
-        .btn-icon.delete:hover {
-            background-color: var(--accent-red);
-            color: #ffffff;
-            border-color: var(--accent-red);
-        }
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(66, 217, 176, 0.15),
+                    rgba(66, 217, 176, 0.035)
+                );
 
-        /* MOBILE CARDS (Hidden on Desktop) */
-        .mobile-cards {
-            display: none;
-            padding: 1rem;
-            gap: 1rem;
-            flex-direction: column;
-        }
+            border: 1px solid rgba(66, 217, 176, 0.18);
 
-        .mobile-card {
-            background: var(--surface);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius);
-            padding: 1rem;
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-        }
+            color: var(--teal);
 
-        .mobile-card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+            font-size: 12px;
 
-        .mobile-card-body {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0.5rem;
-            font-size: 0.85rem;
-        }
-
-        .mobile-card-footer {
-            display: flex;
-            justify-content: flex-end;
-            gap: 0.5rem;
-            border-top: 1px solid var(--border-color);
-            padding-top: 0.75rem;
-        }
-
-        /* EMPTY STATE */
-        .empty-state {
-            padding: 4rem 1rem;
-            text-align: center;
-        }
-
-        .empty-state i {
-            font-size: 2.5rem;
-            color: var(--text-muted);
-            margin-bottom: 1rem;
-        }
-
-        .empty-state h3 {
-            font-size: 1.1rem;
             font-weight: 700;
-            margin-bottom: 0.25rem;
+
+            transition:
+                transform 0.3s ease,
+                box-shadow 0.3s ease,
+                background 0.3s ease;
         }
 
-        .empty-state p {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            margin-bottom: 1.5rem;
+        .avatar::after {
+            content: "";
+
+            position: absolute;
+
+            width: 7px;
+            height: 7px;
+
+            right: -4px;
+            bottom: -4px;
+
+            border: 2px solid #09110f;
+
+            border-radius: 50%;
+
+            background: var(--teal-light);
+
+            box-shadow:
+                0 0 9px rgba(66, 217, 176, 0.65);
         }
 
-        /* PAGINATION */
-        .pagination-footer {
-            display: flex;
-            justify-content: space-between;
+        tbody tr:hover .avatar {
+            transform: translateY(-2px);
+
+            background:
+                rgba(66, 217, 176, 0.12);
+
+            box-shadow:
+                0 0 18px rgba(66, 217, 176, 0.08);
+        }
+
+        /* =========================
+           LAST NAME
+        ========================== */
+
+        td:nth-child(3) {
+            color: #9aa9a4;
+        }
+
+        /* =========================
+           EMAIL
+        ========================== */
+
+        .email {
+            color: #82938d;
+
+            transition: color 0.25s ease;
+        }
+
+        tbody tr:hover .email {
+            color: var(--teal-light);
+        }
+
+        /* =========================
+           USERNAME
+        ========================== */
+
+        .username {
+            display: inline-flex;
+
             align-items: center;
-            padding: 0.85rem 1.25rem;
-            border-top: 1px solid var(--border-color);
-            background-color: var(--surface);
-            font-size: 0.85rem;
-            color: var(--text-muted);
+
+            max-width: 100%;
+
+            padding: 7px 11px;
+
+            border: 1px solid rgba(113, 159, 146, 0.11);
+
+            border-radius: 8px;
+
+            background:
+                rgba(255, 255, 255, 0.022);
+
+            color: #84938e;
+
+            font-size: 11.5px;
+
+            font-weight: 600;
+
+            overflow: hidden;
+
+            text-overflow: ellipsis;
+
+            transition:
+                color 0.25s ease,
+                background 0.25s ease,
+                border-color 0.25s ease,
+                transform 0.25s ease;
         }
 
-        .pagination-controls {
+        tbody tr:hover .username {
+            color: var(--teal);
+
+            background:
+                rgba(66, 217, 176, 0.06);
+
+            border-color:
+                rgba(66, 217, 176, 0.18);
+
+            transform: translateY(-1px);
+        }
+
+        /* =========================
+           EMPTY STATE
+        ========================== */
+
+        .empty {
+            height: 220px !important;
+
+            text-align: center !important;
+
+            color: var(--text-muted) !important;
+
+            font-size: 13px;
+
+            white-space: normal;
+
+            overflow: visible;
+        }
+
+        .empty::before {
+            content: "○";
+
+            display: block;
+
+            margin-bottom: 9px;
+
+            color: #33443e;
+
+            font-size: 28px;
+        }
+
+        /* =========================
+           FOOTER
+        ========================== */
+
+        .footer {
             display: flex;
-            gap: 0.35rem;
+
+            align-items: center;
+            justify-content: space-between;
+
+            margin-top: 17px;
+
+            padding: 0 4px;
+
+            color: #53645e;
+
+            font-size: 11px;
+
+            font-weight: 500;
         }
 
-        .page-btn {
-            padding: 0.35rem 0.65rem;
-            border: 1px solid var(--border-color);
-            background: var(--surface);
-            color: var(--text-main);
-            border-radius: var(--radius);
-            font-size: 0.85rem;
-            cursor: pointer;
-            text-decoration: none;
+        .connection {
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
         }
 
-        .page-btn.active {
-            background-color: var(--accent-red);
-            color: white;
-            border-color: var(--accent-red);
+        .status-dot {
+            width: 7px;
+            height: 7px;
+
+            flex-shrink: 0;
+
+            border-radius: 50%;
+
+            background: var(--teal);
+
+            box-shadow:
+                0 0 0 4px rgba(66, 217, 176, 0.055),
+                0 0 10px rgba(66, 217, 176, 0.45);
         }
 
-        .page-btn:hover:not(.active) {
-            background-color: var(--bg-body);
+        .footer-right {
+            color: #3e4d48;
         }
 
-        /* RESPONSIVE MEDIA QUERIES */
-        @media (max-width: 900px) {
-            .sidebar {
-                width: 70px;
+        /* =========================
+           SCROLLBAR
+        ========================== */
+
+        .table-wrapper::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .table-wrapper::-webkit-scrollbar-track {
+            background: #080d0c;
+        }
+
+        .table-wrapper::-webkit-scrollbar-thumb {
+            background: #294039;
+
+            border-radius: 20px;
+        }
+
+        .table-wrapper::-webkit-scrollbar-thumb:hover {
+            background: #376055;
+        }
+
+        /* =========================
+           TABLET
+        ========================== */
+
+        @media (max-width: 1000px) {
+
+            body {
+                padding: 20px 14px;
             }
-            .sidebar-brand span, .nav-item span {
+
+            .container {
+                padding: 30px 28px 25px;
+            }
+
+            .directory-label {
                 display: none;
             }
-            .main-wrapper {
-                margin-left: 70px;
-            }
-            .table-responsive {
-                display: none;
-            }
-            .mobile-cards {
-                display: flex;
+
+            table {
+                min-width: 900px;
             }
         }
 
-        @media (max-width: 600px) {
-            .sidebar {
+        /* =========================
+           MOBILE
+        ========================== */
+
+        @media (max-width: 650px) {
+
+            body {
+                padding: 12px;
+            }
+
+            .container {
+                padding: 23px 18px 21px;
+
+                border-radius: 20px;
+            }
+
+            .top-section {
+                margin-bottom: 22px;
+            }
+
+            .main-icon {
+                width: 50px;
+                height: 50px;
+
+                border-radius: 14px;
+            }
+
+            .main-icon svg {
+                width: 25px;
+                height: 25px;
+            }
+
+            .title-area {
+                gap: 12px;
+            }
+
+            .title-content h2 {
+                font-size: 21px;
+            }
+
+            .title-content p {
+                font-size: 10.5px;
+            }
+
+            .counter {
                 display: none;
             }
-            .main-wrapper {
-                margin-left: 0;
+
+            .table-card {
+                border-radius: 16px;
             }
-            .portal-container {
-                padding: 1.25rem 1rem;
+
+            .footer {
+                gap: 8px;
             }
         }
+
+        /* =========================
+           SMALL MOBILE
+        ========================== */
+
+        @media (max-width: 430px) {
+
+            body {
+                padding: 8px;
+            }
+
+            .container {
+                padding: 19px 14px;
+            }
+
+            .title-content h2 {
+                font-size: 19px;
+            }
+
+            .title-content p {
+                font-size: 10px;
+            }
+
+            .footer {
+                flex-direction: column;
+
+                align-items: flex-start;
+            }
+        }
+
     </style>
 </head>
+
+
 <body>
 
-    <!-- SIDEBAR NAVIGATION -->
-    <aside class="sidebar">
-        <div class="sidebar-brand">
-            <i class="fa-solid fa-graduation-cap"></i>
-            <span>Academia Portal</span>
-        </div>
-        <nav class="sidebar-nav">
-            <a href="#" class="nav-item">
-                <i class="fa-solid fa-house"></i>
-                <span>Dashboard</span>
-            </a>
-            <a href="#" class="nav-item active">
-                <i class="fa-solid fa-user-graduate"></i>
-                <span>Students</span>
-            </a>
-            <a href="#" class="nav-item">
-                <i class="fa-solid fa-user-plus"></i>
-                <span>Add Student</span>
-            </a>
-            <a href="#" class="nav-item">
-                <i class="fa-solid fa-book"></i>
-                <span>Courses</span>
-            </a>
-            <a href="#" class="nav-item">
-                <i class="fa-solid fa-gear"></i>
-                <span>Settings</span>
-            </a>
-        </nav>
-    </aside>
 
-    <!-- MAIN WRAPPER -->
-    <div class="main-wrapper">
-        <div class="portal-container">
+    <div class="container">
 
-            <!-- PAGE HEADER -->
-            <header class="page-header">
-                <div class="header-title">
-                    <h1>Student List</h1>
-                    <p>View and manage registered students.</p>
-                </div>
-                <button class="btn">
-                    <i class="fa-solid fa-plus"></i> Add Student
-                </button>
-            </header>
 
-            <!-- SUMMARY CARDS -->
-            <section class="summary-grid">
-                <div class="summary-card">
-                    <div class="summary-icon"><i class="fa-solid fa-users"></i></div>
-                    <div class="summary-content">
-                        <div class="card-title">Total Students</div>
-                        <div class="card-value">1,248</div>
-                    </div>
-                </div>
-                <div class="summary-card">
-                    <div class="summary-icon"><i class="fa-solid fa-user-check"></i></div>
-                    <div class="summary-content">
-                        <div class="card-title">Active Students</div>
-                        <div class="card-value">1,190</div>
-                    </div>
-                </div>
-                <div class="summary-card">
-                    <div class="summary-icon"><i class="fa-solid fa-book-open"></i></div>
-                    <div class="summary-content">
-                        <div class="card-title">Courses</div>
-                        <div class="card-value">14</div>
-                    </div>
-                </div>
-                <div class="summary-card">
-                    <div class="summary-icon"><i class="fa-solid fa-layer-group"></i></div>
-                    <div class="summary-content">
-                        <div class="card-title">Year Levels</div>
-                        <div class="card-value">4</div>
-                    </div>
-                </div>
-            </section>
+        <!-- =========================
+             HEADER
+        ========================== -->
 
-            <!-- SEARCH AND FILTER TOOLBAR -->
-            <div class="toolbar">
-                <div class="search-group">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                    <input type="text" placeholder="Search by name or student ID...">
+        <div class="top-section">
+
+
+            <div class="title-area">
+
+
+                <!-- Modern User Directory Icon -->
+
+                <div class="main-icon">
+
+                    <svg
+                        viewBox="0 0 32 32"
+                        aria-hidden="true"
+                    >
+
+                        <!-- Main user -->
+
+                        <circle
+                            cx="16"
+                            cy="10"
+                            r="4"
+                        />
+
+                        <path
+                            d="M8.5 25c.8-4.4 3.4-6.8 7.5-6.8s6.7 2.4 7.5 6.8"
+                        />
+
+                        <!-- Left user -->
+
+                        <circle
+                            cx="6"
+                            cy="15"
+                            r="2.5"
+                        />
+
+                        <path
+                            d="M2.5 24.5c.4-2.7 1.6-4.3 3.5-4.8"
+                        />
+
+                        <!-- Right user -->
+
+                        <circle
+                            cx="26"
+                            cy="15"
+                            r="2.5"
+                        />
+
+                        <path
+                            d="M29.5 24.5c-.4-2.7-1.6-4.3-3.5-4.8"
+                        />
+
+                    </svg>
+
                 </div>
-                <div class="filter-group">
-                    <select class="filter-select">
-                        <option value="">All Courses</option>
-                        <option value="BSCS">BS Computer Science</option>
-                        <option value="BSIT">BS Information Technology</option>
-                    </select>
-                    <select class="filter-select">
-                        <option value="">All Year Levels</option>
-                        <option value="1">1st Year</option>
-                        <option value="2">2nd Year</option>
-                        <option value="3">3rd Year</option>
-                        <option value="4">4th Year</option>
-                    </select>
-                    <button class="btn btn-outline" title="Clear Filters">
-                        <i class="fa-solid fa-rotate-left"></i> Reset
-                    </button>
+
+
+                <div class="title-content">
+
+                    <h2>Registered Users</h2>
+
+                    <p>
+                        Manage and view all registered accounts
+                    </p>
+
                 </div>
+
+
             </div>
 
-            <!-- STUDENT TABLE CONTAINER -->
-            <div class="content-card">
-                
+
+            <div class="header-meta">
+
+
+                <div class="directory-label">
+
+                    <span class="directory-icon"></span>
+
+                    User Directory
+
+                </div>
+
+
                 <?php if (!empty($users)): ?>
-                    <!-- Desktop Table View -->
-                    <div class="table-responsive">
-                        <table class="student-table">
-                            <thead>
-                                <tr>
-                                    <th>Student</th>
-                                    <th>Student ID</th>
-                                    <th>Course</th>
-                                    <th>Year</th>
-                                    <th>Section</th>
-                                    <th>Role</th>
-                                    <th>Status</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach ($users as $user): ?>
-                                    <?php 
-                                        $initials = strtoupper(substr($user['username'], 0, 2));
-                                    ?>
-                                    <tr>
-                                        <td>
-                                            <div class="student-profile-cell">
-                                                <div class="avatar"><?= $initials ?: 'ST'; ?></div>
-                                                <div class="student-info">
-                                                    <div class="name"><?= htmlspecialchars($fullName ?: $user['username']); ?></div>
-                                                                                        <div class="name"><?= htmlspecialchars($user['username']); ?></div>
-                                                    <div class="id-muted">@<?= htmlspecialchars($user['username']); ?></div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td><span class="text-muted">#<?= htmlspecialchars($user['id']); ?></span></td>
-                                        <td>BS Computer Science</td>
-                                        <td>3rd Year</td>
-                                        <td>Section A</td>
-                                        <td><span class="text-muted"><?= htmlspecialchars($user['role']); ?></span></td>
-                                        <td><span class="badge badge-active">Active</span></td>
-                                        <td>
-                                            <div class="actions-cell">
-                                                <button class="btn-icon" title="View Details"><i class="fa-solid fa-eye"></i></button>
-                                                <button class="btn-icon" title="Edit Student"><i class="fa-solid fa-pen"></i></button>
-                                                <button class="btn-icon delete" title="Delete Student"><i class="fa-solid fa-trash-can"></i></button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
+
+                    <div class="counter">
+
+                        <span class="counter-dot"></span>
+
+                        <?= count($users); ?> Users
+
                     </div>
 
-                    <!-- Mobile Card View -->
-                    <div class="mobile-cards">
-                        <?php foreach ($users as $user): ?>
-                            <?php 
-                                $initials = strtoupper(substr($user['username'], 0, 2));
-                            ?>
-                                                                <div class="name"><?= htmlspecialchars($user['username']); ?></div>
-                            <div class="mobile-card">
-                                <div class="mobile-card-header">
-                                    <div class="student-profile-cell">
-                                        <div class="avatar"><?= $initials ?: 'ST'; ?></div>
-                                        <div class="student-info">
-                                            <div class="name"><?= htmlspecialchars($fullName ?: $user['username']); ?></div>
-                                            <div class="id-muted">ID: #<?= htmlspecialchars($user['id']); ?></div>
-                                        </div>
-                                    </div>
-                                    <span class="badge badge-active">Active</span>
-                                </div>
-                                <div class="mobile-card-body">
-                                    <div><span class="text-muted">Course:</span> BSCS</div>
-                                    <div><span class="text-muted">Year/Sec:</span> 3rd Yr - A</div>
-                                    <div style="grid-column: span 2;"><span class="text-muted">Role:</span> <?= htmlspecialchars($user['role']); ?></div>
-                                </div>
-                                <div class="mobile-card-footer">
-                                    <button class="btn-icon" title="View Details"><i class="fa-solid fa-eye"></i></button>
-                                    <button class="btn-icon" title="Edit Student"><i class="fa-solid fa-pen"></i></button>
-                                    <button class="btn-icon delete" title="Delete Student"><i class="fa-solid fa-trash-can"></i></button>
-                                </div>
-                            </div>
-                        <?php endforeach; ?>
-                    </div>
-
-                    <!-- Pagination -->
-                    <div class="pagination-footer">
-                        <div>Showing entries for registered students</div>
-                        <div class="pagination-controls">
-                            <button class="page-btn" disabled><i class="fa-solid fa-chevron-left"></i></button>
-                            <button class="page-btn active">1</button>
-                            <button class="page-btn">2</button>
-                            <button class="page-btn">3</button>
-                            <button class="page-btn"><i class="fa-solid fa-chevron-right"></i></button>
-                        </div>
-                    </div>
-
-                <?php else: ?>
-                    <!-- Empty State -->
-                    <div class="empty-state">
-                        <i class="fa-solid fa-folder-open"></i>
-                        <h3>No students found.</h3>
-                        <p>There are no registered student entries available in the database currently.</p>
-                        <button class="btn">
-                            <i class="fa-solid fa-plus"></i> Add Student
-                        </button>
-                    </div>
                 <?php endif; ?>
 
+
+            </div>
+
+
+        </div>
+
+
+        <!-- =========================
+             USER TABLE
+        ========================== -->
+
+        <div class="table-card">
+
+            <div class="table-wrapper">
+
+
+                <table>
+
+
+                    <thead>
+
+                        <tr>
+
+                            <th>ID</th>
+
+                            <th>First Name</th>
+
+                            <th>Last Name</th>
+
+                            <th>Email</th>
+
+                            <th>Username</th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+
+                        <?php if (!empty($users)): ?>
+                            <?php foreach ($users as $user): ?>
+                                <tr>
+                                    <!-- ID -->
+                                    <td>
+
+                                        <span class="id-badge">
+                                            #<?= html_escape(
+                                                $user['id'] ?? ''
+                                            ); ?>
+                                        </span>
+                                    </td>
+                                    <!-- FIRST NAME -->
+                                    <td>
+                                        <div class="name-cell">
+                                            <div class="avatar">
+                                                <?= strtoupper(
+                                                    substr(
+                                                        $user['firstname'] ?? 'U',
+                                                        0,
+                                                        1
+                                                    )
+                                                ); ?>
+
+                                            </div>
+
+
+                                            <?= html_escape(
+                                                $user['firstname'] ?? ''
+                                            ); ?>
+
+
+                                        </div>
+
+                                    </td>
+
+
+                                    <!-- LAST NAME -->
+
+                                    <td>
+
+                                        <?= html_escape(
+                                            $user['lastname'] ?? ''
+                                        ); ?>
+
+                                    </td>
+
+
+                                    <!-- EMAIL -->
+
+                                    <td>
+
+                                        <span class="email">
+
+                                            <?= html_escape(
+                                                $user['email'] ?? ''
+                                            ); ?>
+
+                                        </span>
+
+                                    </td>
+
+
+                                    <!-- USERNAME -->
+
+                                    <td>
+
+                                        <span class="username">
+
+                                            @<?= html_escape(
+                                                $user['username'] ?? ''
+                                            ); ?>
+
+                                        </span>
+
+                                    </td>
+
+
+                                </tr>
+
+
+                            <?php endforeach; ?>
+
+
+                        <?php else: ?>
+
+
+                            <tr>
+
+                                <td
+                                    colspan="5"
+                                    class="empty"
+                                >
+
+                                    No users found in the database.
+
+                                </td>
+
+                            </tr>
+
+
+                        <?php endif; ?>
+
+
+                    </tbody>
+
+
+                </table>
+
+
             </div>
 
         </div>
+
+
+        <!-- =========================
+             FOOTER
+        ========================== -->
+
+        <div class="footer">
+
+
+            <div class="connection">
+
+                <span class="status-dot"></span>
+
+                User database connected
+
+            </div>
+
+
+            <div class="footer-right">
+
+                Registered Accounts
+
+            </div>
+
+
+        </div>
+
+
     </div>
 
+
 </body>
+
 </html>

@@ -16,11 +16,7 @@ class ProductController extends Controller
 
     public function read()
     {
-        $data['products'] = $this->ProductModel->read();
-        $data['name'] = "LavaLust Framework";
-        $data['user_role'] = $this->session->userdata('user_role');
-        $data['notification'] = $this->session->flashdata('notification');
-        $this->call->view('product/ProductView', $data);
+        $this->render_products();
     }
 
     public function create()
@@ -36,13 +32,14 @@ class ProductController extends Controller
                 $quantity = $this->io->post('quantity');
                 $this->ProductModel->create($product_name, $description, $price, $quantity);
                 $this->session->set_flashdata('notification', 'Product added successfully.');
-                header('Location: ' . site_url('/product/display'));
+                header('Location: ' . site_url('/products'));
                 exit;
             }
         }
 
-        $data['errors'] = $this->form_validation->get_errors();
-        $this->call->view('product/create', $data);
+        $this->render_products([
+            'errors' => $this->form_validation->get_errors(),
+        ]);
     }
 
     public function edit($id)
@@ -73,9 +70,10 @@ class ProductController extends Controller
             }
         }
 
-        $data['product'] = $product;
-        $data['errors'] = $this->form_validation->get_errors();
-        $this->call->view('product/edit', $data);
+        $this->render_products([
+            'product' => $product,
+            'errors' => $this->form_validation->get_errors(),
+        ]);
     }
 
     public function delete($id)
@@ -83,8 +81,17 @@ class ProductController extends Controller
         $this->require_admin();
         $this->ProductModel->delete((int) $id);
         $this->session->set_flashdata('notification', 'Product deleted successfully.');
-        header('Location: ' . site_url('/product/display'));
+        header('Location: ' . site_url('/products'));
         exit;
+    }
+
+    private function render_products(array $data = [])
+    {
+        $data['products'] = $this->ProductModel->read();
+        $data['user_role'] = $this->session->userdata('user_role');
+        $data['is_admin'] = $data['user_role'] === 'admin';
+        $data['notification'] = $this->session->flashdata('notification');
+        $this->call->view('products', $data);
     }
 
     private function validate_product()
